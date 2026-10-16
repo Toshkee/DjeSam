@@ -164,6 +164,9 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
 
         {mode === 'create' && (
           <FormSection title={t.timer.title} aside={t.common.optional}>
+            <AppText variant="label" tone="muted">
+              {t.timer.zoneHint}
+            </AppText>
             <TimerPicker value={values.timer} onChange={(timer) => set('timer', timer)} />
             {!isPremium && values.timer.kind !== 'none' && <RemindersUpsell />}
             <AppText variant="caption" tone="subtle">
