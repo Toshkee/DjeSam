@@ -7,9 +7,7 @@ import { Icon, type IconName } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import type { MapStyle } from '@/features/settings/settings';
 import { useSettings } from '@/features/settings/SettingsProvider';
-import { usePremium } from '@/features/premium/PremiumProvider';
-import { usePremiumGate } from '@/features/premium/usePremiumGate';
-import { AVAILABLE_MAP_STYLES, isPremiumMapStyle, useMapType } from '@/features/settings/useMapStyle';
+import { AVAILABLE_MAP_STYLES, useMapType } from '@/features/settings/useMapStyle';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -29,8 +27,6 @@ export function MapStyleButton({ style }: Props) {
   const { t } = useI18n();
   const { colors, radius, spacing } = useTheme();
   const { update } = useSettings();
-  const { isPremium } = usePremium();
-  const requirePremium = usePremiumGate();
   const current = useMapType();
   const { width } = useWindowDimensions();
   const anchor = useRef<View>(null);
@@ -46,7 +42,6 @@ export function MapStyleButton({ style }: Props) {
 
   const choose = (value: MapStyle) => {
     setOpen(false);
-    if (isPremiumMapStyle(value) && !requirePremium()) return;
     Haptics.selectionAsync().catch(() => undefined);
     void update('mapStyle', value);
   };
@@ -78,7 +73,6 @@ export function MapStyleButton({ style }: Props) {
             </AppText>
             {AVAILABLE_MAP_STYLES.map((value) => {
               const selected = current === value;
-              const locked = isPremiumMapStyle(value) && !isPremium;
               return (
                 <Pressable
                   key={value}
@@ -95,7 +89,6 @@ export function MapStyleButton({ style }: Props) {
                     {t.mapStyles[value]}
                   </AppText>
                   {selected && <Icon name="checkmark" size={18} color={colors.accentText} />}
-                  {locked && <Icon name="lock-closed" size={16} color={colors.warning} />}
                 </Pressable>
               );
             })}

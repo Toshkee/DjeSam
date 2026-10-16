@@ -20,14 +20,13 @@ Sve radi lokalno na telefonu. Nema naloga, servera ni sinhronizacije u oblaku.
 
 ## ĐeSam Premium (jednokratna kupovina)
 
-Osnovne funkcije su besplatne: čuvanje parkinga, „Vrati me do auta”, sprat/sekcija/napomena, tajmer na ekranu i posljednjih 5 parkinga u istoriji.
+Osnovne funkcije su besplatne: čuvanje parkinga, „Vrati me do auta”, sprat/sekcija/napomena, tajmer na ekranu, sve vrste mape (standardna, satelit, hibrid; teren na Androidu) i posljednjih 5 parkinga u istoriji.
 
-Premium se otključava **jednom** (Apple tip *Non-Consumable*, bez pretplate) i uključuje:
+Premium se otključava **jednom** za **€4,99** (Apple tip *Non-Consumable*, bez pretplate) i uključuje:
 - podsjetnike na telefonu prije isteka i pri isteku parkinga
 - fotografiju parkinga
 - neograničenu istoriju (stariji parkinzi se i dalje čuvaju, samo su sakriveni u besplatnoj verziji)
-- satelitsku i hibridnu mapu (teren na Androidu)
-- sačuvane zone, koje jednim dodirom popune tajmer i vrstu parkinga
+- „Moje zone”: šabloni poput „Zona 1 Podgorica · 1 h · Ulica” koji jednim dodirom popune vrijeme i vrstu parkinga
 
 Tehnički detalji:
 - **Biblioteka:** kupovina ide preko `expo-iap` (StoreKit 2 / Google Play Billing), bez servera.
@@ -40,7 +39,7 @@ Tehnički detalji:
 3. U aplikaciji otvori *Monetization → In-App Purchases* i napravi proizvod:
    - tip: **Non-Consumable**
    - Product ID: `com.toshkee.desam.premium` (mora se poklapati sa `PREMIUM_PRODUCT_ID` u `src/features/premium/store.ts`)
-   - cijena po izboru (npr. €3,99); aplikacija prikazuje cijenu koju vrati prodavnica, pa se kasnije mijenja bez nove verzije
+   - cijena: **€4,99**; aplikacija prikazuje cijenu koju vrati prodavnica, pa se kasnije mijenja bez nove verzije
    - naziv i opis (npr. „ĐeSam Premium”) i screenshot za review
 4. Kupovinu testiraj u development buildu ili TestFlight-u, sa Sandbox nalogom.
 

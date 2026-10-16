@@ -227,8 +227,7 @@ export const me = {
       reminders: 'Podsjetnik prije isteka parkinga i kad istekne',
       photo: 'Fotografija mjesta đe je auto',
       history: 'Neograničena istorija parkiranja',
-      maps: 'Satelitska i hibridna mapa',
-      zones: 'Sačuvane zone za čuvanje jednim dodirom',
+      zones: 'Moje zone: npr. „Zona 1 · 1 h“ popuni vrijeme i vrstu parkinga jednim dodirom',
     },
     buy: (price: string) => `Otključaj za ${price}`,
     buyFallback: 'Otključaj Premium',
@@ -248,7 +247,6 @@ export const me = {
     remindersLocked: 'Tajmer odbrojava u aplikaciji. Podsjetnik na telefonu je dio Premium-a.',
     historyLocked: (n: number) =>
       `Još ${n} ${plural(n, { one: 'parking je sačuvan', few: 'parkinga su sačuvana', other: 'parkinga je sačuvano' })}. Otključaj cijelu istoriju uz Premium.`,
-    mapsLocked: 'Satelit i hibrid su dio Premium-a.',
     devToggle: 'Premium (test, samo u razvoju)',
     settingsRow: 'ĐeSam Premium',
     learnMore: 'Saznaj više',

@@ -14,11 +14,10 @@ import { usePremium } from '@/features/premium/PremiumProvider';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
-const FEATURES: { key: 'reminders' | 'photo' | 'history' | 'maps' | 'zones'; icon: IconName }[] = [
+const FEATURES: { key: 'reminders' | 'photo' | 'history' | 'zones'; icon: IconName }[] = [
   { key: 'reminders', icon: 'notifications-outline' },
   { key: 'photo', icon: 'camera-outline' },
   { key: 'history', icon: 'time-outline' },
-  { key: 'maps', icon: 'earth-outline' },
   { key: 'zones', icon: 'bookmark-outline' },
 ];
 

@@ -14,7 +14,7 @@ import { requestNotificationPermission } from '@/features/notifications/reminder
 import { clearHistory, deleteAllData } from '@/features/parking/service';
 import { useSettings } from '@/features/settings/SettingsProvider';
 import type { MapStyle, ThemePreference } from '@/features/settings/settings';
-import { AVAILABLE_MAP_STYLES, isPremiumMapStyle, useMapType } from '@/features/settings/useMapStyle';
+import { AVAILABLE_MAP_STYLES, useMapType } from '@/features/settings/useMapStyle';
 import { usePremium } from '@/features/premium/PremiumProvider';
 import { usePremiumGate } from '@/features/premium/usePremiumGate';
 import { PremiumBadge } from '@/components/ui/PremiumBadge';
@@ -148,17 +148,9 @@ export default function SettingsScreen() {
             <SegmentedControl<MapStyle>
               accessibilityLabel={t.map.mapStyle}
               value={mapType as MapStyle}
-              onChange={(v) => {
-                if (isPremiumMapStyle(v) && !requirePremium()) return;
-                void update('mapStyle', v);
-              }}
+              onChange={(v) => update('mapStyle', v)}
               options={AVAILABLE_MAP_STYLES.map((s) => ({ value: s, label: t.mapStylesShort[s] }))}
             />
-            {!isPremium && (
-              <AppText variant="caption" tone="subtle">
-                {t.premium.mapsLocked}
-              </AppText>
-            )}
           </View>
         </ListGroup>
 
