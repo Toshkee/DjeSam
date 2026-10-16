@@ -2,6 +2,7 @@ import { directionsUrl, providersForPlatform } from '@/features/directions/urls'
 
 import { distanceMeters, isApproximate, isValidCoordinates, regionForPoints } from './geo';
 import { singleFlight } from './singleFlight';
+import { cyrillicToLatin } from './transliterate';
 
 describe('geo', () => {
   const podgorica = { latitude: 42.4411, longitude: 19.2636 };
@@ -81,5 +82,15 @@ describe('directions', () => {
     expect(providersForPlatform('ios', false)).toEqual(['apple', 'google-web']);
     expect(providersForPlatform('ios', true)).toEqual(['apple', 'google-app']);
     expect(providersForPlatform('android', false)).toEqual(['google-web', 'android-geo']);
+  });
+});
+
+describe('cyrillicToLatin', () => {
+  it('transliterates Montenegrin street names', () => {
+    expect(cyrillicToLatin('Булевар Станка Драгојевића, Подгорица')).toBe('Bulevar Stanka Dragojevića, Podgorica');
+    expect(cyrillicToLatin('Његошева')).toBe('Njegoševa');
+    expect(cyrillicToLatin('ЉУБЉАНА')).toBe('LJUBLJANA');
+    expect(cyrillicToLatin('Џаковица')).toBe('Džakovica');
+    expect(cyrillicToLatin('Independence Square 12')).toBe('Independence Square 12');
   });
 });

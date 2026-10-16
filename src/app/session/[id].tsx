@@ -131,7 +131,7 @@ function Details({ session }: { session: ParkingSession }) {
         <CarClues session={session} />
 
         <ListGroup>
-          <ListRow label={t.details.address} value={session.address ?? t.details.addressUnavailable} />
+          <ListRow label={t.details.address} value={session.address ?? t.details.addressUnavailable} multilineValue />
           <ListRow label={t.details.coordinates} value={f.coordinates(session.latitude, session.longitude)} />
           <ListRow
             label={t.details.accuracy}

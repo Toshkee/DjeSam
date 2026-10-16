@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { AccessibilityInfo, Animated, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Animated, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FullWindowOverlay } from 'react-native-screens';
 
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -18,10 +19,19 @@ type Show = (text: string, options?: { icon?: IconName; tone?: ToastMessage['ton
 
 const ToastContext = createContext<Show>(() => undefined);
 
+/**
+ * On iOS the native stack and form sheets sit above regular React views, so the toast is
+ * rendered in a separate full-window layer to stay visible everywhere.
+ */
+function Overlay({ children }: { children: ReactNode }) {
+  return Platform.OS === 'ios' ? <FullWindowOverlay>{children}</FullWindowOverlay> : <>{children}</>;
+}
+
 /** Lightweight confirmation toast ("Parking sačuvan") that also announces itself to screen readers. */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [message, setMessage] = useState<ToastMessage | null>(null);
   const counter = useRef(0);
+  const hide = useCallback(() => setMessage(null), []);
 
   const show = useCallback<Show>((text, options) => {
     counter.current += 1;
@@ -37,7 +47,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={show}>
       {children}
-      {message && <ToastView key={message.id} message={message} onDone={() => setMessage(null)} />}
+      {message && (
+        <Overlay>
+          <ToastView key={message.id} message={message} onDone={hide} />
+        </Overlay>
+      )}
     </ToastContext.Provider>
   );
 }
@@ -47,11 +61,12 @@ function ToastView({ message, onDone }: { message: ToastMessage; onDone: () => v
   const insets = useSafeAreaInsets();
   const [anim] = useState(() => new Animated.Value(0));
 
+  // JS-driven: natively driven opacity did not render inside FullWindowOverlay on iOS 27.
   useEffect(() => {
     const sequence = Animated.sequence([
-      Animated.spring(anim, { toValue: 1, useNativeDriver: true, friction: 8, tension: 80 }),
-      Animated.delay(2200),
-      Animated.timing(anim, { toValue: 0, duration: 200, useNativeDriver: true }),
+      Animated.spring(anim, { toValue: 1, useNativeDriver: false, friction: 8, tension: 80 }),
+      Animated.delay(2400),
+      Animated.timing(anim, { toValue: 0, duration: 200, useNativeDriver: false }),
     ]);
     sequence.start(({ finished }) => finished && onDone());
     return () => sequence.stop();

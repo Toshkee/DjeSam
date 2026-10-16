@@ -2,6 +2,7 @@ import * as Location from 'expo-location';
 
 import type { Coordinates } from '@/features/parking/types';
 import { isValidCoordinates } from '@/lib/geo';
+import { cyrillicToLatin } from '@/lib/transliterate';
 
 export interface Fix extends Coordinates {
   accuracy: number | null;
@@ -78,7 +79,8 @@ export async function reverseGeocode(c: Coordinates): Promise<string | null> {
       (p): p is string => typeof p === 'string' && p.length > 0,
     );
     const unique = parts.filter((p, i) => parts.indexOf(p) === i);
-    return unique.length > 0 ? unique.join(', ') : (first.formattedAddress ?? null);
+    const address = unique.length > 0 ? unique.join(', ') : first.formattedAddress;
+    return address ? cyrillicToLatin(address) : null;
   } catch {
     return null;
   }
