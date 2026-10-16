@@ -6,7 +6,8 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
  */
 const androidMapsKey = process.env.GOOGLE_MAPS_ANDROID_API_KEY ?? '';
 
-const BRAND = '#0A6CDB';
+/** Montenegrin flag red; the icon's gold underline echoes the flag's border. */
+const FLAG_RED = '#C40308';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -32,7 +33,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: 'com.toshkee.desam',
     adaptiveIcon: {
-      backgroundColor: BRAND,
+      backgroundColor: FLAG_RED,
+      backgroundImage: './assets/android-icon-background.png',
       foregroundImage: './assets/android-icon-foreground.png',
       monochromeImage: './assets/android-icon-monochrome.png',
     },
@@ -51,9 +53,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-splash-screen',
       {
         image: './assets/splash-icon.png',
-        imageWidth: 120,
-        backgroundColor: '#F4F6F9',
-        dark: { image: './assets/splash-icon.png', backgroundColor: '#0A111C' },
+        imageWidth: 220,
+        backgroundColor: FLAG_RED,
+        dark: { image: './assets/splash-icon.png', backgroundColor: FLAG_RED },
       },
     ],
     [
@@ -76,7 +78,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-notifications',
       {
-        color: BRAND,
+        color: FLAG_RED,
         defaultChannel: 'parking-reminders',
         enableRemoteNotifications: false,
       },
