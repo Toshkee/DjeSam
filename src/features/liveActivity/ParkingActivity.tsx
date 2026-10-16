@@ -1,5 +1,5 @@
 import { HStack, Image, ProgressView, Spacer, Text, VStack } from '@expo/ui/swift-ui';
-import { font, foregroundStyle, frame, monospacedDigit, padding, tint } from '@expo/ui/swift-ui/modifiers';
+import { font, foregroundStyle, frame, labelsHidden, monospacedDigit, padding, tint } from '@expo/ui/swift-ui/modifiers';
 import { createLiveActivity, type LiveActivityEnvironment } from 'expo-widgets';
 
 /**
@@ -17,7 +17,8 @@ export interface ParkingActivityProps {
   expiresLabel: string;
 }
 
-const ParkingActivity = (props: ParkingActivityProps, environment: LiveActivityEnvironment) => {
+// Must be a function declaration: the Babel widgets plugin only stringifies `function` nodes.
+function ParkingActivity(props: ParkingActivityProps, environment: LiveActivityEnvironment) {
   'widget';
   // Constants must live inside the widget function (isolated runtime).
   const red = environment.isLuminanceReduced ? '#FFFFFF' : '#E5383B';
@@ -51,7 +52,7 @@ const ParkingActivity = (props: ParkingActivityProps, environment: LiveActivityE
             />
           </VStack>
         </HStack>
-        <ProgressView timerInterval={range} countsDown modifiers={[tint(red)]} />
+        <ProgressView timerInterval={range} countsDown modifiers={[tint(red), labelsHidden()]} />
         {props.place ? (
           <Text modifiers={[font({ size: 13 }), foregroundStyle(muted), frame({ maxWidth: 10000, alignment: 'leading' })]}>
             {props.place}
@@ -64,7 +65,7 @@ const ParkingActivity = (props: ParkingActivityProps, environment: LiveActivityE
       <Text
         timerInterval={range}
         countsDown
-        modifiers={[font({ size: 14, weight: 'semibold' }), monospacedDigit(), frame({ width: 52 })]}
+        modifiers={[font({ size: 14, weight: 'semibold' }), monospacedDigit(), frame({ width: 64, alignment: 'trailing' })]}
       />
     ),
     minimal: <Image systemName="parkingsign.circle.fill" color={red} />,
@@ -77,11 +78,11 @@ const ParkingActivity = (props: ParkingActivityProps, environment: LiveActivityE
     expandedTrailing: countdown(22),
     expandedBottom: (
       <VStack alignment="leading" spacing={6} modifiers={[padding({ horizontal: 4 })]}>
-        <ProgressView timerInterval={range} countsDown modifiers={[tint(red)]} />
+        <ProgressView timerInterval={range} countsDown modifiers={[tint(red), labelsHidden()]} />
         {props.place ? <Text modifiers={[font({ size: 13 }), foregroundStyle(muted)]}>{props.place}</Text> : null}
       </VStack>
     ),
   };
-};
+}
 
 export default createLiveActivity('ParkingActivity', ParkingActivity);

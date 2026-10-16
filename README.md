@@ -24,6 +24,7 @@ Osnovne funkcije su besplatne: čuvanje parkinga, „Vrati me do auta”, sprat/
 
 Premium se otključava **jednom** za **€4,99** (Apple tip *Non-Consumable*, bez pretplate) i uključuje:
 - podsjetnike na telefonu prije isteka i pri isteku parkinga
+- **odbrojavanje na zaključanom ekranu i u Dynamic Island-u** (Live Activity, iOS 16.2+): odbrojava sam iOS, bez buđenja aplikacije
 - fotografiju parkinga
 - neograničenu istoriju (stariji parkinzi se i dalje čuvaju, samo su sakriveni u besplatnoj verziji)
 - „Moje zone”: šabloni poput „Zona 1 Podgorica · 1 h · Ulica” koji jednim dodirom popune vrijeme i vrstu parkinga
@@ -31,6 +32,7 @@ Premium se otključava **jednom** za **€4,99** (Apple tip *Non-Consumable*, be
 Tehnički detalji:
 - **Biblioteka:** kupovina ide preko `expo-iap` (StoreKit 2 / Google Play Billing), bez servera.
 - **Keš:** stanje otključavanja čuva se lokalno u SQLite-u i osvježava iz prodavnice pri svakom pokretanju, pa radi i offline. Rad sa prodavnicom je u `src/features/premium/`.
+- **Live Activity:** `expo-widgets` + `@expo/ui` (SwiftUI). Izgled je u `src/features/liveActivity/ParkingActivity.tsx`. Pokreće se, ažurira i gasi zajedno sa podsjetnicima (`resyncReminders`). Traži development ili store build; u Expo Go-u i na Androidu se tiho preskače. Koristi App Group (`group.com.toshkee.desam`), za koji na pravom uređaju treba plaćeni Apple Developer nalog.
 - **Expo Go:** in-app kupovina tamo ne postoji. U razvojnom režimu Podešavanja zato imaju prekidač „Premium (test, samo u razvoju)” za isprobavanje zaključanih i otključanih stanja.
 
 ### Podešavanje proizvoda u App Store Connect-u
@@ -132,6 +134,8 @@ Ako `pod install` padne sa greškom `Unicode Normalization not appropriate for A
 ```bash
 export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 ```
+
+**iOS 27 SDK:** aplikacije buildovane sa Xcode 27 moraju koristiti UIKit „scene” životni ciklus, inače padaju pri pokretanju. Šablon Expo SDK 57 to još ne radi, pa lokalni plugin `plugins/withSceneLifecycle.js` prebacuje AppDelegate na `ExpoAppSceneDelegate`. Plugin treba ukloniti nakon prelaska na SDK 58+, čiji šablon to radi sam.
 
 ### Android
 

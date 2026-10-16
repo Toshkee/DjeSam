@@ -88,6 +88,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-iap',
     // Lock Screen / Dynamic Island countdown (Live Activity). Registered at runtime, no widgets[].
     ['expo-widgets', { enablePushNotifications: false }],
+    // Required by the iOS 27 SDK; see plugins/withSceneLifecycle.js.
+    './plugins/withSceneLifecycle',
   ],
   experiments: {
     typedRoutes: true,

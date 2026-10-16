@@ -60,8 +60,11 @@ export function PremiumProvider({ children }: { children: ReactNode }) {
       try {
         const owned = await ownsPremium();
         if (cancelled) return;
-        await persist(owned);
-        setIsPremium(owned);
+        // Development builds keep a test unlock even though the sandbox store says "not owned".
+        if (owned || !__DEV__) {
+          await persist(owned);
+          setIsPremium(owned);
+        }
       } catch {
         // Offline or store hiccup: keep the cached state.
       }
@@ -85,15 +88,16 @@ export function PremiumProvider({ children }: { children: ReactNode }) {
     return owned;
   }, [unlock]);
 
+  // Development-only switch (Expo Go and dev builds); never present in release builds.
   const setDevUnlocked = useMemo(
     () =>
-      __DEV__ && !storeAvailable
+      __DEV__
         ? async (unlocked: boolean) => {
             await persist(unlocked);
             setIsPremium(unlocked);
           }
         : null,
-    [storeAvailable],
+    [],
   );
 
   const value = useMemo<PremiumValue>(

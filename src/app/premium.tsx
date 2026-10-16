@@ -33,7 +33,7 @@ export default function PremiumScreen() {
   const buy = async () => {
     setBusy('buy');
     try {
-      if (setDevUnlocked) {
+      if (setDevUnlocked && !storeAvailable) {
         await setDevUnlocked(true);
       } else {
         const outcome = await purchase();
@@ -66,7 +66,7 @@ export default function PremiumScreen() {
   };
 
   const canBuy = storeAvailable || !!setDevUnlocked;
-  const buyLabel = setDevUnlocked
+  const buyLabel = setDevUnlocked && !storeAvailable
     ? t.premium.devUnlock
     : product
       ? t.premium.buy(product.displayPrice)

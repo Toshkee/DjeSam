@@ -165,6 +165,7 @@ export const me = {
   timer: {
     title: 'Vrijeme parkiranja',
     zoneHint: 'Parkiraš u plaćenoj zoni? Izaberi za koliko vremena si platio, a ĐeSam odbrojava do isteka. Za besplatan parking ostavi „Bez tajmera“.',
+    sheetHint: 'Izaberi za koliko vremena si platio parking u zoni, a ĐeSam odbrojava do isteka.',
     none: 'Bez tajmera',
     custom: 'Prilagodi',
     start: 'Pokreni tajmer',

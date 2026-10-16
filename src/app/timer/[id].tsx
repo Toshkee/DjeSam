@@ -106,7 +106,7 @@ export default function TimerSheet() {
       ) : (
         <>
           <AppText variant="label" tone="muted">
-            {t.timer.zoneHint}
+            {t.timer.sheetHint}
           </AppText>
           <TimerPicker value={choice} onChange={setChoice} allowNone={false} />
           <Button
