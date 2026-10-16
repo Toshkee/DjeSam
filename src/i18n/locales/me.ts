@@ -164,10 +164,9 @@ export const me = {
 
   timer: {
     title: 'Vrijeme parkiranja',
-    zoneHint: 'Za plaćeni parking u zoni: izaberi koliko si platio i ĐeSam odbrojava do isteka. Za besplatan parking ostavi „Bez tajmera“.',
+    zoneHint: 'Parkiraš u plaćenoj zoni? Izaberi za koliko vremena si platio, a ĐeSam odbrojava do isteka. Za besplatan parking ostavi „Bez tajmera“.',
     none: 'Bez tajmera',
     custom: 'Prilagodi',
-    customTitle: 'Koliko si platio?',
     start: 'Pokreni tajmer',
     update: 'Sačuvaj tajmer',
     extend: 'Produži',
@@ -264,7 +263,7 @@ export const me = {
     name: 'Naziv',
     namePlaceholder: 'npr. Zona 1 Podgorica',
     nameRequired: 'Unesi naziv zone',
-    duration: 'Koliko obično plaćaš',
+    duration: 'Za koliko vremena obično plaćaš',
     type: 'Vrsta parkinga',
     save: 'Sačuvaj zonu',
     delete: 'Obriši zonu',
