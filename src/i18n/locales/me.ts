@@ -40,6 +40,20 @@ export const me = {
     other: 'Ostalo',
   },
 
+  mapStyles: {
+    standard: 'Standardna',
+    satellite: 'Satelit',
+    hybrid: 'Satelit s ulicama',
+    terrain: 'Teren',
+  },
+
+  mapStylesShort: {
+    standard: 'Mapa',
+    satellite: 'Satelit',
+    hybrid: 'Hibrid',
+    terrain: 'Teren',
+  },
+
   parkingTypesShort: {
     street: 'Ulica',
     garage: 'Garaža',
@@ -65,6 +79,7 @@ export const me = {
     newParking: 'Novi parking',
     recenter: 'Prikaži moju lokaciju',
     showCar: 'Prikaži auto',
+    mapStyle: 'Vrsta mape',
     markerTitle: 'Ovdje je auto',
     approximateBadge: 'Približna lokacija',
     finishConfirmTitle: 'Završiti parking?',

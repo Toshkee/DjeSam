@@ -140,5 +140,7 @@ describe('settings', () => {
       DEFAULT_SETTINGS.warningLeadMinutes,
     );
     expect(parseSettings([{ key: 'defaultTimerMinutes', value: '60' }]).defaultTimerMinutes).toBe(60);
+    expect(parseSettings([{ key: 'mapStyle', value: '"hybrid"' }]).mapStyle).toBe('hybrid');
+    expect(parseSettings([{ key: 'mapStyle', value: '"lunar"' }]).mapStyle).toBe('standard');
   });
 });

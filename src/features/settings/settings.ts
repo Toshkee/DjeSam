@@ -3,6 +3,9 @@ import { TIMER_PRESETS_MINUTES, WARNING_LEAD_OPTIONS_MINUTES } from '@/features/
 
 export type ThemePreference = 'system' | 'light' | 'dark';
 
+export const MAP_STYLES = ['standard', 'satellite', 'hybrid', 'terrain'] as const;
+export type MapStyle = (typeof MAP_STYLES)[number];
+
 export interface AppSettings {
   theme: ThemePreference;
   warningLeadMinutes: number;
@@ -10,6 +13,7 @@ export interface AppSettings {
   /** Preselected timer for new sessions; null = no timer. */
   defaultTimerMinutes: number | null;
   reverseGeocode: boolean;
+  mapStyle: MapStyle;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -18,6 +22,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   notifyAtExpiry: true,
   defaultTimerMinutes: null,
   reverseGeocode: true,
+  mapStyle: 'standard',
 };
 
 type Parser<T> = (raw: unknown) => T | undefined;
@@ -34,6 +39,7 @@ const parsers: { [K in keyof AppSettings]: Parser<AppSettings[K]> } = {
       ? (v as number | null)
       : undefined,
   reverseGeocode: (v) => (typeof v === 'boolean' ? v : undefined),
+  mapStyle: (v) => ((MAP_STYLES as readonly unknown[]).includes(v) ? (v as MapStyle) : undefined),
 };
 
 /** Unknown keys and malformed values fall back to defaults instead of crashing. */

@@ -14,6 +14,7 @@ import { useToast } from '@/components/ui/Toast';
 import { useSession } from '@/features/parking/hooks';
 import { deleteParking } from '@/features/parking/service';
 import { isActive, type ParkingSession } from '@/features/parking/types';
+import { useMapType } from '@/features/settings/useMapStyle';
 import { useI18n } from '@/i18n';
 import { useNow } from '@/lib/useNow';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -48,6 +49,7 @@ function Details({ session }: { session: ParkingSession }) {
   const router = useRouter();
   const toast = useToast();
   const active = isActive(session);
+  const mapType = useMapType();
 
   const openReturn = () => router.push({ pathname: '/return/[id]', params: { id: session.id } });
   const openEdit = () => router.push({ pathname: '/edit/[id]', params: { id: session.id } });
@@ -100,6 +102,7 @@ function Details({ session }: { session: ParkingSession }) {
             pitchEnabled={false}
             toolbarEnabled={false}
             liteMode
+            mapType={mapType}
             userInterfaceStyle={scheme}
             pointerEvents="none"
           >

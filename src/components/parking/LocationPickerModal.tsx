@@ -7,11 +7,13 @@ import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import type { Coordinates } from '@/features/parking/types';
+import { useMapType } from '@/features/settings/useMapStyle';
 import { useI18n } from '@/i18n';
 import { MONTENEGRO_REGION } from '@/lib/geo';
 import { useTheme } from '@/theme/ThemeProvider';
 
 import { CarPin } from './CarMarker';
+import { MapStyleButton } from './MapStyleButton';
 
 interface Props {
   visible: boolean;
@@ -31,6 +33,7 @@ export function LocationPickerModal({ visible, initial, userLocation, onCancel, 
   const { t } = useI18n();
   const { colors, spacing, scheme } = useTheme();
   const mapRef = useRef<MapView>(null);
+  const mapType = useMapType();
   const start = initial ?? userLocation;
   const [center, setCenter] = useState<Coordinates | null>(start);
 
@@ -49,6 +52,7 @@ export function LocationPickerModal({ visible, initial, userLocation, onCancel, 
             showsMyLocationButton={false}
             showsPointsOfInterests={false}
             userInterfaceStyle={scheme}
+            mapType={mapType}
             onRegionChangeComplete={(r) => setCenter({ latitude: r.latitude, longitude: r.longitude })}
             accessibilityLabel={t.save.adjustHint}
           />
@@ -74,6 +78,9 @@ export function LocationPickerModal({ visible, initial, userLocation, onCancel, 
               <View style={styles.spacer} />
             )}
           </SafeAreaView>
+          <SafeAreaView edges={['top']} pointerEvents="box-none" style={[styles.side, { right: spacing.lg }]}>
+            <MapStyleButton />
+          </SafeAreaView>
           <SafeAreaView edges={['bottom']} style={[styles.bottom, { padding: spacing.lg }]}>
             <Button
               label={t.save.confirmPosition}
@@ -96,5 +103,6 @@ const styles = StyleSheet.create({
   top: { position: 'absolute', top: 8, left: 0, right: 0, flexDirection: 'row', alignItems: 'center', gap: 8 },
   hint: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 999, borderWidth: StyleSheet.hairlineWidth },
   spacer: { width: 44 },
+  side: { position: 'absolute', top: 62 },
   bottom: { position: 'absolute', left: 0, right: 0, bottom: 0 },
 });

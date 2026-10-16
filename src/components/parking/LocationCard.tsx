@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import type { LocationPermission } from '@/features/location/location';
 import type { Coordinates, LocationSource } from '@/features/parking/types';
+import { useMapType } from '@/features/settings/useMapStyle';
 import { useI18n } from '@/i18n';
 import { isApproximate } from '@/lib/geo';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -38,6 +39,7 @@ export function LocationCard({
   const { t, f } = useI18n();
   const { colors, radius, spacing, scheme } = useTheme();
   const mapRef = useRef<MapView>(null);
+  const mapType = useMapType();
 
   const lat = coordinates?.latitude;
   const lng = coordinates?.longitude;
@@ -72,6 +74,7 @@ export function LocationCard({
               toolbarEnabled={false}
               showsPointsOfInterests={false}
               userInterfaceStyle={scheme}
+              mapType={mapType}
               liteMode
               pointerEvents="none"
               accessibilityElementsHidden

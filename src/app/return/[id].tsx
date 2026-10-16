@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CarClues } from '@/components/parking/CarClues';
 import { CarMarker } from '@/components/parking/CarMarker';
+import { MapStyleButton } from '@/components/parking/MapStyleButton';
 import { AppText } from '@/components/ui/AppText';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
@@ -15,6 +16,7 @@ import { useToast } from '@/components/ui/Toast';
 import { openDirections, shareCarLocation } from '@/features/directions/openDirections';
 import { useLiveLocation, useLocationStatus } from '@/features/location/hooks';
 import { useSession } from '@/features/parking/hooks';
+import { useMapType } from '@/features/settings/useMapStyle';
 import { endParking } from '@/features/parking/service';
 import { isActive, type Coordinates, type ParkingSession } from '@/features/parking/types';
 import { useI18n } from '@/i18n';
@@ -55,6 +57,7 @@ function ReturnView({ session }: { session: ParkingSession }) {
   const router = useRouter();
   const toast = useToast();
   const mapRef = useRef<MapView>(null);
+  const mapType = useMapType();
 
   const location = useLocationStatus();
   const granted = location.permission?.state === 'granted';
@@ -121,6 +124,7 @@ function ReturnView({ session }: { session: ParkingSession }) {
           showsMyLocationButton={false}
           showsPointsOfInterests={false}
           userInterfaceStyle={scheme}
+          mapType={mapType}
           onMapReady={() => setMapReady(true)}
           onPanDrag={() => {
             autoFrame.current = false;
@@ -128,6 +132,7 @@ function ReturnView({ session }: { session: ParkingSession }) {
         >
           <CarMarker coordinate={session} title={t.map.markerTitle} />
         </MapView>
+        <MapStyleButton style={[styles.styleButton, { right: spacing.lg }]} />
         <IconButton
           icon="scan-outline"
           label={t.map.showCar}
@@ -201,6 +206,7 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   mapWrap: { height: 300 },
   fitButton: { position: 'absolute', bottom: 12 },
+  styleButton: { position: 'absolute', top: 12 },
   distanceCard: { gap: 4, borderWidth: StyleSheet.hairlineWidth },
   row: { flexDirection: 'row', gap: 8 },
   flex: { flex: 1 },

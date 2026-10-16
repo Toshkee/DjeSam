@@ -6,12 +6,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ActiveParkingPanel } from '@/components/parking/ActiveParkingPanel';
 import { CarMarker } from '@/components/parking/CarMarker';
+import { MapStyleButton } from '@/components/parking/MapStyleButton';
 import { AppText } from '@/components/ui/AppText';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import { useLiveLocation, useLocationStatus } from '@/features/location/hooks';
 import { useActiveSession } from '@/features/parking/hooks';
+import { useMapType } from '@/features/settings/useMapStyle';
 import { useI18n } from '@/i18n';
 import { MONTENEGRO_REGION, regionForPoints } from '@/lib/geo';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -24,6 +26,7 @@ export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const mapRef = useRef<MapView>(null);
+  const mapType = useMapType();
 
   const location = useLocationStatus();
   const granted = location.permission?.state === 'granted';
@@ -92,6 +95,7 @@ export default function MapScreen() {
         showsCompass={false}
         showsPointsOfInterests={false}
         userInterfaceStyle={scheme}
+        mapType={mapType}
         mapPadding={{ top: insets.top, right: 0, bottom: panelHeight, left: 0 }}
         onMapReady={() => setMapReady(true)}
       >
@@ -99,6 +103,7 @@ export default function MapScreen() {
       </MapView>
 
       <View style={[styles.controls, { top: insets.top + spacing.sm, right: spacing.lg }]}>
+        <MapStyleButton />
         {granted && fix && <IconButton icon="locate" label={t.map.recenter} onPress={centerOnUser} floating tone="accent" />}
         {active && <IconButton icon="car-outline" label={t.map.showCar} onPress={centerOnCar} floating />}
       </View>

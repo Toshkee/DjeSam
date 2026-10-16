@@ -11,7 +11,8 @@ import { requestLocationPermission } from '@/features/location/location';
 import { requestNotificationPermission } from '@/features/notifications/reminders';
 import { clearHistory, deleteAllData } from '@/features/parking/service';
 import { useSettings } from '@/features/settings/SettingsProvider';
-import type { ThemePreference } from '@/features/settings/settings';
+import type { MapStyle, ThemePreference } from '@/features/settings/settings';
+import { AVAILABLE_MAP_STYLES } from '@/features/settings/useMapStyle';
 import { usePermissionOverview, type PermissionSummary } from '@/features/settings/usePermissionOverview';
 import { TIMER_PRESETS_MINUTES, WARNING_LEAD_OPTIONS_MINUTES } from '@/features/timer/timer';
 import { useI18n } from '@/i18n';
@@ -85,7 +86,10 @@ export default function SettingsScreen() {
       </AppText>
 
       <ListGroup title={t.settings.appearance}>
-        <View style={{ padding: spacing.md }}>
+        <View style={{ padding: spacing.md, gap: spacing.sm }}>
+          <AppText variant="label" tone="muted">
+            {t.settings.theme}
+          </AppText>
           <SegmentedControl<ThemePreference>
             accessibilityLabel={t.settings.theme}
             value={settings.theme}
@@ -95,6 +99,17 @@ export default function SettingsScreen() {
               { value: 'light', label: t.settings.themeLight },
               { value: 'dark', label: t.settings.themeDark },
             ]}
+          />
+        </View>
+        <View style={{ padding: spacing.md, gap: spacing.sm }}>
+          <AppText variant="label" tone="muted">
+            {t.map.mapStyle}
+          </AppText>
+          <SegmentedControl<MapStyle>
+            accessibilityLabel={t.map.mapStyle}
+            value={settings.mapStyle}
+            onChange={(v) => update('mapStyle', v)}
+            options={AVAILABLE_MAP_STYLES.map((s) => ({ value: s, label: t.mapStylesShort[s] }))}
           />
         </View>
       </ListGroup>
