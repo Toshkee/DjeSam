@@ -22,7 +22,7 @@ Sve radi lokalno na telefonu. Nema naloga, servera ni sinhronizacije u oblaku.
 
 | Oblast | Izbor |
 | --- | --- |
-| Okvir | Expo SDK 58, React Native 0.88, React 19, TypeScript (strict, `noUncheckedIndexedAccess`) |
+| Okvir | Expo SDK 57, React Native 0.86, React 19.2, TypeScript (strict, `noUncheckedIndexedAccess`) |
 | Navigacija | Expo Router (`src/app`) |
 | Mapa | `react-native-maps` (Apple Maps na iOS-u, Google Maps na Androidu) |
 | Lokacija | `expo-location` (samo dok je aplikacija otvorena, bez lokacije u pozadini) |
@@ -82,7 +82,19 @@ Potrebno je:
 npm install
 ```
 
-> **Važno:** Expo Go za SDK 58 još nije objavljen u prodavnicama aplikacija. Do tada je potreban **development build**, koji se pravi lokalno ili preko EAS-a. Nativni folderi `ios/` i `android/` se generišu automatski (CNG) i nisu dio repozitorijuma.
+### Najbrže: Expo Go na telefonu
+
+Projekat je na SDK 57, koji Expo Go iz App Store-a i Google Play-a podržava. Telefon i Mac moraju biti na istoj Wi-Fi mreži.
+
+```bash
+npx expo start --go
+```
+
+QR kod skeniraj kamerom (iPhone) ili iz Expo Go aplikacije (Android). `--go` je potreban jer je instaliran i `expo-dev-client`. Ako se projekat beskonačno otvara, provjeri da li si na istoj mreži i da macOS firewall dozvoljava dolazne konekcije za `node`.
+
+### Development build
+
+Za build van Expo Go-a: nativni folderi `ios/` i `android/` generišu se automatski (CNG) i nisu dio repozitorijuma.
 
 ### iOS (simulator ili uređaj)
 
