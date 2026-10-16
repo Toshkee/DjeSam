@@ -4,11 +4,19 @@ import { View } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
 import { useTheme } from '@/theme/ThemeProvider';
 
-export function FormSection({ title, aside, children }: { title: string; aside?: string; children: ReactNode }) {
+interface Props {
+  title: string;
+  aside?: string;
+  /** Extra element next to the title, e.g. a Premium badge. */
+  badge?: ReactNode;
+  children: ReactNode;
+}
+
+export function FormSection({ title, aside, badge, children }: Props) {
   const { spacing } = useTheme();
   return (
     <View style={{ gap: spacing.sm }}>
-      <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
         <AppText variant="heading" accessibilityRole="header">
           {title}
         </AppText>
@@ -17,6 +25,7 @@ export function FormSection({ title, aside, children }: { title: string; aside?:
             {aside}
           </AppText>
         )}
+        {badge}
       </View>
       {children}
     </View>

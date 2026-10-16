@@ -9,6 +9,7 @@ import { Icon, type IconName } from '@/components/ui/Icon';
 import { TextField } from '@/components/ui/TextField';
 import { useLiveLocation, useLocationStatus } from '@/features/location/hooks';
 import { useZones } from '@/features/parking/hooks';
+import { PremiumBadge } from '@/components/ui/PremiumBadge';
 import { usePremium } from '@/features/premium/PremiumProvider';
 import { PARKING_TYPES, type Coordinates, type LocationSource, type ParkingType } from '@/features/parking/types';
 import { useI18n } from '@/i18n';
@@ -163,7 +164,11 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
         )}
 
         {mode === 'create' && (
-          <FormSection title={t.timer.title} aside={t.common.optional}>
+          <FormSection
+            title={t.timer.title}
+            aside={t.common.optional}
+            badge={isPremium ? undefined : <PremiumBadge label={t.premium.reminderBadge} />}
+          >
             <AppText variant="label" tone="muted">
               {t.timer.zoneHint}
             </AppText>
@@ -175,7 +180,11 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
           </FormSection>
         )}
 
-        <FormSection title={t.save.photo} aside={t.common.optional}>
+        <FormSection
+          title={t.save.photo}
+          aside={isPremium ? t.common.optional : undefined}
+          badge={isPremium ? undefined : <PremiumBadge />}
+        >
           <PhotoField uri={values.photoUri} onChange={(uri) => set('photoUri', uri)} />
         </FormSection>
 

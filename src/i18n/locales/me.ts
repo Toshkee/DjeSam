@@ -245,6 +245,7 @@ export const me = {
     activeBody: 'Hvala što podržavaš ĐeSam.',
     legal: 'Plaćanje ide preko App Store naloga. Kupovina važi na svim tvojim uređajima sa istim Apple ID-jem.',
     locked: 'Premium',
+    reminderBadge: 'Podsjetnik · Premium',
     remindersLocked: 'Tajmer odbrojava u aplikaciji. Podsjetnik na telefonu je dio Premium-a.',
     historyLocked: (n: number) =>
       `Još ${n} ${plural(n, { one: 'parking je sačuvan', few: 'parkinga su sačuvana', other: 'parkinga je sačuvano' })}. Otključaj cijelu istoriju uz Premium.`,

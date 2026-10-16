@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/ui/AppText';
 import { Icon } from '@/components/ui/Icon';
-import { PremiumBadge } from '@/components/ui/PremiumBadge';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -29,7 +28,6 @@ export function RemindersUpsell() {
           {t.premium.learnMore}
         </AppText>
       </View>
-      <PremiumBadge />
     </Pressable>
   );
 }

@@ -5,7 +5,6 @@ import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
-import { PremiumBadge } from '@/components/ui/PremiumBadge';
 import { usePhotoPicker } from '@/features/photos/usePhotoPicker';
 import { usePremium } from '@/features/premium/PremiumProvider';
 import { usePremiumGate } from '@/features/premium/usePremiumGate';
@@ -40,7 +39,7 @@ export function PhotoField({ uri, onChange }: Props) {
         <AppText tone="muted" style={styles.flex}>
           {t.premium.features.photo}
         </AppText>
-        <PremiumBadge />
+        <Icon name="lock-closed" size={16} color={colors.warning} />
       </Pressable>
     );
   }
