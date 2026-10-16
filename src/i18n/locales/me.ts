@@ -96,13 +96,14 @@ export const me = {
   permissions: {
     locationDeniedTitle: 'Lokacija nije dozvoljena',
     locationDeniedBody:
-      'Bez lokacije ne mogu automatski da zapamtim đe je auto. Dozvoli lokaciju u podešavanjima ili označi mjesto ručno na mapi.',
+      'Bez lokacije ne mogu automatski da zapamtim đe je auto. Otvori podešavanja, dodirni Lokacija i izaberi „Dok se koristi aplikacija“ — ili označi mjesto ručno na mapi.',
     locationRequestTitle: 'Dozvoli lokaciju',
     locationRequestBody:
       'ĐeSam koristi lokaciju samo dok je aplikacija otvorena, da zapamti đe si parkirao i pokaže koliko si daleko od auta.',
     allowLocation: 'Dozvoli lokaciju',
     servicesOffTitle: 'Lokacija je isključena',
-    servicesOffBody: 'Uključi lokacijske usluge na telefonu ili označi mjesto ručno na mapi.',
+    servicesOffBody:
+      'Lokacija je isključena za cijeli telefon. Uključi je u Podešavanja → Privatnost i sigurnost → Lokacijske usluge, ili označi mjesto ručno na mapi.',
     pickManually: 'Označi ručno',
     positionErrorTitle: 'Ne mogu da nađem lokaciju',
     positionErrorBody: 'GPS signal je slab. Pokušaj ponovo ili označi mjesto ručno na mapi.',
