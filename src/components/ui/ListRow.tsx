@@ -64,6 +64,9 @@ export function ListRow({
   );
 
   if (!onPress) {
+    // Rows with an interactive trailing control (e.g. a Switch) must not be grouped into one
+    // accessibility element, or the control becomes unreachable for VoiceOver and taps.
+    if (trailing) return content(false);
     return (
       <View accessible accessibilityLabel={value ? `${label}: ${value}` : label}>
         {content(false)}

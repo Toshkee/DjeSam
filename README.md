@@ -18,6 +18,32 @@ Sve radi lokalno na telefonu. Nema naloga, servera ni sinhronizacije u oblaku.
   - opcione adrese (reverse geocoding)
   - privatnost, verzija aplikacije i brisanje svih podataka
 
+## ĐeSam Premium (jednokratna kupovina)
+
+Osnovne funkcije su besplatne: čuvanje parkinga, „Vrati me do auta”, sprat/sekcija/napomena, tajmer na ekranu i posljednjih 5 parkinga u istoriji.
+
+Premium se otključava **jednom** (Apple tip *Non-Consumable*, bez pretplate) i uključuje:
+- podsjetnike na telefonu prije isteka i pri isteku parkinga
+- fotografiju parkinga
+- neograničenu istoriju (stariji parkinzi se i dalje čuvaju, samo su sakriveni u besplatnoj verziji)
+- satelitsku i hibridnu mapu (teren na Androidu)
+- sačuvane zone, koje jednim dodirom popune tajmer i vrstu parkinga
+
+Tehnički detalji:
+- **Biblioteka:** kupovina ide preko `expo-iap` (StoreKit 2 / Google Play Billing), bez servera.
+- **Keš:** stanje otključavanja čuva se lokalno u SQLite-u i osvježava iz prodavnice pri svakom pokretanju, pa radi i offline. Rad sa prodavnicom je u `src/features/premium/`.
+- **Expo Go:** in-app kupovina tamo ne postoji. U razvojnom režimu Podešavanja zato imaju prekidač „Premium (test, samo u razvoju)” za isprobavanje zaključanih i otključanih stanja.
+
+### Podešavanje proizvoda u App Store Connect-u
+1. U *Agreements, Tax, and Banking* potpiši **Paid Apps Agreement** i unesi bankovne i poreske podatke.
+2. Prijavi se u **App Store Small Business Program** (provizija 15% umjesto 30%).
+3. U aplikaciji otvori *Monetization → In-App Purchases* i napravi proizvod:
+   - tip: **Non-Consumable**
+   - Product ID: `com.toshkee.desam.premium` (mora se poklapati sa `PREMIUM_PRODUCT_ID` u `src/features/premium/store.ts`)
+   - cijena po izboru (npr. €3,99); aplikacija prikazuje cijenu koju vrati prodavnica, pa se kasnije mijenja bez nove verzije
+   - naziv i opis (npr. „ĐeSam Premium”) i screenshot za review
+4. Kupovinu testiraj u development buildu ili TestFlight-u, sa Sandbox nalogom.
+
 ## Tehnologije
 
 | Oblast | Izbor |
