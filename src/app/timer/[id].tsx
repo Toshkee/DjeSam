@@ -5,6 +5,7 @@ import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TimerPicker, timerChoiceFromMinutes, timerChoiceMinutes, type TimerChoice } from '@/components/parking/TimerPicker';
+import { RemindersUpsell } from '@/components/parking/RemindersUpsell';
 import { TimerStatus } from '@/components/parking/TimerStatus';
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
@@ -13,6 +14,7 @@ import { useToast } from '@/components/ui/Toast';
 import { useNotificationPermissionFlow } from '@/features/notifications/useNotificationPermissionFlow';
 import { useSession } from '@/features/parking/hooks';
 import { extendParkingTimer, setParkingTimer } from '@/features/parking/service';
+import { usePremium } from '@/features/premium/PremiumProvider';
 import { useSettings } from '@/features/settings/SettingsProvider';
 import { EXTEND_PRESETS_MINUTES } from '@/features/timer/timer';
 import { useI18n } from '@/i18n';
@@ -26,6 +28,7 @@ export default function TimerSheet() {
   const router = useRouter();
   const toast = useToast();
   const { settings } = useSettings();
+  const { isPremium } = usePremium();
   const ensureNotifications = useNotificationPermissionFlow();
   const { data: session, loading } = useSession(id);
   const [choice, setChoice] = useState<TimerChoice>(() => timerChoiceFromMinutes(settings.defaultTimerMinutes ?? 60));
@@ -112,13 +115,14 @@ export default function TimerSheet() {
               const minutes = timerChoiceMinutes(choice);
               if (minutes === null) return;
               void run(async () => {
-                await ensureNotifications();
+                if (isPremium) await ensureNotifications();
                 await setParkingTimer(session.id, minutes);
               }, t.timer.running);
             }}
           />
         </>
       )}
+      {!isPremium && <RemindersUpsell />}
       <AppText variant="caption" tone="subtle">
         {t.timer.disclaimer}
       </AppText>

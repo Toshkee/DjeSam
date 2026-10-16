@@ -2,12 +2,14 @@ import { getDb } from '@/db/client';
 import { reverseGeocode } from '@/features/location/location';
 import { cancelAllReminders, syncReminders } from '@/features/notifications/reminders';
 import { deleteAllPhotos, deletePhoto, deletePhotos, removeOrphanedPhotos, storePhoto } from '@/features/photos/photoStorage';
+import { createEntitlementRepository } from '@/features/premium/entitlement';
 import { createSettingsRepository } from '@/features/settings/settings';
 import { clampTimerMinutes, computeExpiry, extendTimer } from '@/features/timer/timer';
 import { isValidCoordinates } from '@/lib/geo';
 import { createId, singleFlight } from '@/lib/singleFlight';
 
 import { createParkingRepository, type ParkingPatch } from './repository';
+import { createZoneRepository, type Zone } from './zones';
 import type { NewParkingInput, ParkingSession, ParkingUpdateInput } from './types';
 
 /* ------------------------------------------------------------------ change feed */
@@ -32,7 +34,12 @@ function notifyChanged() {
 
 export async function getRepositories() {
   const db = await getDb();
-  return { parking: createParkingRepository(db), settings: createSettingsRepository(db) };
+  return {
+    parking: createParkingRepository(db),
+    settings: createSettingsRepository(db),
+    entitlement: createEntitlementRepository(db),
+    zones: createZoneRepository(db),
+  };
 }
 
 const clean = (value: string | null): string | null => {
@@ -47,12 +54,15 @@ export class InvalidLocationError extends Error {
   }
 }
 
-/** Reschedules reminders for whatever session is active now. Failures never break a save. */
+/**
+ * Reschedules reminders for whatever session is active now. Phone reminders are a Premium
+ * feature; without it any scheduled ones are cancelled. Failures never break a save.
+ */
 export async function resyncReminders(): Promise<void> {
   try {
-    const { parking, settings } = await getRepositories();
-    const [active, prefs] = await Promise.all([parking.getActive(), settings.load()]);
-    await syncReminders(active, prefs);
+    const { parking, settings, entitlement } = await getRepositories();
+    const [active, prefs, premium] = await Promise.all([parking.getActive(), settings.load(), entitlement.load()]);
+    await syncReminders(premium ? active : null, prefs);
   } catch {
     // Notifications are best effort; the in-app timer still shows the correct state.
   }
@@ -228,9 +238,10 @@ export async function clearHistory(): Promise<void> {
 }
 
 export async function deleteAllData(): Promise<void> {
-  const { parking, settings } = await getRepositories();
+  const { parking, settings, zones } = await getRepositories();
   await cancelAllReminders().catch(() => undefined);
   await parking.clearAll();
+  await zones.clear();
   await settings.clear();
   deleteAllPhotos();
   notifyChanged();
@@ -248,4 +259,18 @@ export async function reconcileOnLaunch(): Promise<void> {
   } catch {
     // Housekeeping only.
   }
+}
+
+/* ------------------------------------------------------------------ saved zones */
+
+export async function saveZone(zone: Zone): Promise<void> {
+  const { zones } = await getRepositories();
+  await zones.upsert(zone);
+  notifyChanged();
+}
+
+export async function deleteZone(id: string): Promise<void> {
+  const { zones } = await getRepositories();
+  await zones.remove(id);
+  notifyChanged();
 }

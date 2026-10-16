@@ -37,6 +37,15 @@ export const MIGRATIONS: readonly string[] = [
     value TEXT NOT NULL
   );
   `,
+  `
+  CREATE TABLE IF NOT EXISTS zones (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL CHECK (length(trim(name)) > 0),
+    duration_minutes INTEGER NOT NULL CHECK (duration_minutes > 0),
+    parking_type TEXT CHECK (parking_type IN ('street', 'garage', 'lot', 'private', 'other')),
+    created_at INTEGER NOT NULL
+  );
+  `,
 ];
 
 export async function migrate(db: Db): Promise<number> {

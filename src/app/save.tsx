@@ -8,6 +8,7 @@ import { timerChoiceFromMinutes, timerChoiceMinutes } from '@/components/parking
 import { useToast } from '@/components/ui/Toast';
 import { useNotificationPermissionFlow } from '@/features/notifications/useNotificationPermissionFlow';
 import { saveParking } from '@/features/parking/service';
+import { usePremium } from '@/features/premium/PremiumProvider';
 import { useSettings } from '@/features/settings/SettingsProvider';
 import { useI18n } from '@/i18n';
 import { isValidCoordinates } from '@/lib/geo';
@@ -22,6 +23,7 @@ export default function SaveParkingScreen() {
   const router = useRouter();
   const toast = useToast();
   const { settings } = useSettings();
+  const { isPremium } = usePremium();
   const ensureNotifications = useNotificationPermissionFlow();
   const params = useLocalSearchParams<{ lat?: string; lng?: string; acc?: string }>();
   const [submitting, setSubmitting] = useState(false);
@@ -49,7 +51,8 @@ export default function SaveParkingScreen() {
     setSubmitting(true);
     try {
       const timerMinutes = timerChoiceMinutes(values.timer);
-      if (timerMinutes !== null) await ensureNotifications();
+      // Phone reminders are Premium; free users still get the in-app countdown.
+      if (timerMinutes !== null && isPremium) await ensureNotifications();
       const { photoFailed } = await saveParking({
         coordinates: values.coordinates,
         accuracy: values.locationSource === 'manual' ? null : values.accuracy,

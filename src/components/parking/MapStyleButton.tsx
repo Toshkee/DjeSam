@@ -7,7 +7,9 @@ import { Icon, type IconName } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import type { MapStyle } from '@/features/settings/settings';
 import { useSettings } from '@/features/settings/SettingsProvider';
-import { AVAILABLE_MAP_STYLES } from '@/features/settings/useMapStyle';
+import { usePremium } from '@/features/premium/PremiumProvider';
+import { usePremiumGate } from '@/features/premium/usePremiumGate';
+import { AVAILABLE_MAP_STYLES, isPremiumMapStyle, useMapType } from '@/features/settings/useMapStyle';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -26,7 +28,10 @@ interface Props {
 export function MapStyleButton({ style }: Props) {
   const { t } = useI18n();
   const { colors, radius, spacing } = useTheme();
-  const { settings, update } = useSettings();
+  const { update } = useSettings();
+  const { isPremium } = usePremium();
+  const requirePremium = usePremiumGate();
+  const current = useMapType();
   const { width } = useWindowDimensions();
   const anchor = useRef<View>(null);
   // Menu opens right below the button, wherever the button is on screen.
@@ -40,8 +45,9 @@ export function MapStyleButton({ style }: Props) {
   };
 
   const choose = (value: MapStyle) => {
-    Haptics.selectionAsync().catch(() => undefined);
     setOpen(false);
+    if (isPremiumMapStyle(value) && !requirePremium()) return;
+    Haptics.selectionAsync().catch(() => undefined);
     void update('mapStyle', value);
   };
 
@@ -71,7 +77,8 @@ export function MapStyleButton({ style }: Props) {
               {t.map.mapStyle}
             </AppText>
             {AVAILABLE_MAP_STYLES.map((value) => {
-              const selected = settings.mapStyle === value;
+              const selected = current === value;
+              const locked = isPremiumMapStyle(value) && !isPremium;
               return (
                 <Pressable
                   key={value}
@@ -88,6 +95,7 @@ export function MapStyleButton({ style }: Props) {
                     {t.mapStyles[value]}
                   </AppText>
                   {selected && <Icon name="checkmark" size={18} color={colors.accentText} />}
+                  {locked && <Icon name="lock-closed" size={16} color={colors.warning} />}
                 </Pressable>
               );
             })}

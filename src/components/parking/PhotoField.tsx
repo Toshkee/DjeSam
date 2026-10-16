@@ -1,9 +1,14 @@
 import { Image } from 'expo-image';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
+import { PremiumBadge } from '@/components/ui/PremiumBadge';
 import { usePhotoPicker } from '@/features/photos/usePhotoPicker';
+import { usePremium } from '@/features/premium/PremiumProvider';
+import { usePremiumGate } from '@/features/premium/usePremiumGate';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -16,6 +21,29 @@ export function PhotoField({ uri, onChange }: Props) {
   const { t } = useI18n();
   const { colors, radius, spacing } = useTheme();
   const { takePhoto, pickPhoto } = usePhotoPicker();
+  const { isPremium } = usePremium();
+  const requirePremium = usePremiumGate();
+
+  // Free plan: an existing photo stays visible/removable, but adding one needs Premium.
+  if (!isPremium && !uri) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${t.save.photo}, ${t.premium.locked}`}
+        onPress={requirePremium}
+        style={({ pressed }) => [
+          styles.locked,
+          { borderRadius: radius.md, borderColor: colors.border, backgroundColor: pressed ? colors.surfaceMuted : colors.surface },
+        ]}
+      >
+        <Icon name="camera-outline" size={20} color={colors.textMuted} />
+        <AppText tone="muted" style={styles.flex}>
+          {t.premium.features.photo}
+        </AppText>
+        <PremiumBadge />
+      </Pressable>
+    );
+  }
 
   const take = async () => {
     const next = await takePhoto();
@@ -59,4 +87,5 @@ const styles = StyleSheet.create({
   remove: { position: 'absolute', top: 10, right: 10 },
   row: { flexDirection: 'row', gap: 8 },
   flex: { flex: 1 },
+  locked: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14, minHeight: 52, borderWidth: StyleSheet.hairlineWidth },
 });

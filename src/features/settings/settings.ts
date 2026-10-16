@@ -72,8 +72,9 @@ export function createSettingsRepository(db: Db) {
         [key, JSON.stringify(value)],
       );
     },
+    /** Clears user preferences; internal keys (prefixed "__", e.g. the Premium cache) are kept. */
     async clear(): Promise<void> {
-      await db.runAsync('DELETE FROM settings');
+      await db.runAsync("DELETE FROM settings WHERE substr(key, 1, 2) <> '__'");
     },
   };
 }

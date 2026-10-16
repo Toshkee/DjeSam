@@ -8,12 +8,21 @@ import { AppText } from '@/components/ui/AppText';
 import { Banner } from '@/components/ui/Banner';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { StatusBarScrim } from '@/components/ui/StatusBarScrim';
 import { useToast } from '@/components/ui/Toast';
 import { useHistory } from '@/features/parking/hooks';
 import { clearHistory, deleteParking } from '@/features/parking/service';
+import { FREE_HISTORY_LIMIT } from '@/features/premium/entitlement';
+import { usePremium } from '@/features/premium/PremiumProvider';
 import type { ParkingSession } from '@/features/parking/types';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
+
+function limitForFreePlan(items: ParkingSession[] | undefined): ParkingSession[] | undefined {
+  if (!items) return items;
+  let ended = 0;
+  return items.filter((s) => s.endedAt === null || ++ended <= FREE_HISTORY_LIMIT);
+}
 
 export default function HistoryScreen() {
   const { t } = useI18n();
@@ -22,6 +31,11 @@ export default function HistoryScreen() {
   const router = useRouter();
   const toast = useToast();
   const { items, total, error, loading, loadMore, reload } = useHistory();
+  const { isPremium } = usePremium();
+  // Free plan shows the active session plus the most recent ones; older history stays stored
+  // and appears as soon as Premium is unlocked.
+  const visible = isPremium ? items : limitForFreePlan(items);
+  const hiddenCount = isPremium ? 0 : Math.max(0, total - (visible?.length ?? 0));
   const hasEnded = !!items?.some((s) => s.endedAt !== null);
 
   const open = useCallback(
@@ -78,7 +92,7 @@ export default function HistoryScreen() {
   return (
     <View style={[styles.fill, { backgroundColor: colors.background }]}>
       <FlatList
-        data={items ?? []}
+        data={visible ?? []}
         keyExtractor={(s) => s.id}
         renderItem={({ item }) => <HistoryRow session={item} onPress={open} onLongPress={confirmDelete} />}
         ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}
@@ -95,23 +109,25 @@ export default function HistoryScreen() {
           )
         }
         ListFooterComponent={
-          hasEnded ? (
-            <Button
-              label={t.history.clearAll}
-              icon="trash-outline"
-              variant="danger"
-              onPress={confirmClear}
-              style={{ marginTop: spacing.xxl }}
-            />
-          ) : undefined
+          <View style={{ gap: spacing.lg, marginTop: spacing.lg }}>
+            {hiddenCount > 0 && (
+              <Banner tone="warning" icon="lock-closed-outline" body={t.premium.historyLocked(hiddenCount)}>
+                <Button label={t.premium.learnMore} variant="secondary" onPress={() => router.push('/premium')} />
+              </Banner>
+            )}
+            {hasEnded && (
+              <Button label={t.history.clearAll} icon="trash-outline" variant="danger" onPress={confirmClear} />
+            )}
+          </View>
         }
         contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl }}
-        onEndReached={loadMore}
+        onEndReached={isPremium ? loadMore : undefined}
         onEndReachedThreshold={0.5}
         initialNumToRender={10}
         windowSize={7}
         removeClippedSubviews
       />
+      <StatusBarScrim />
     </View>
   );
 }

@@ -95,3 +95,14 @@ export function useHistory() {
 
   return { items, total, error, loading: items === undefined && !error, loadMore, reload };
 }
+
+export function useZones() {
+  return useParkingQuery(async () => (await getRepositories()).zones.list(), 'zones');
+}
+
+export function useZone(id: string | undefined) {
+  return useParkingQuery(
+    async () => (id ? (await getRepositories()).zones.getById(id) : null),
+    `zone:${id ?? ''}`,
+  );
+}

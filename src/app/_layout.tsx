@@ -13,6 +13,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { getDb } from '@/db/client';
 import { configureNotifications } from '@/features/notifications/reminders';
 import { reconcileOnLaunch } from '@/features/parking/service';
+import { PremiumProvider } from '@/features/premium/PremiumProvider';
 import { SettingsProvider, useSettings } from '@/features/settings/SettingsProvider';
 import { I18nProvider, useI18n } from '@/i18n';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
@@ -45,7 +46,9 @@ export default function RootLayout() {
       <I18nProvider>
         {dbState === 'ready' ? (
           <SettingsProvider>
-            <ThemedApp />
+            <PremiumProvider>
+              <ThemedApp />
+            </PremiumProvider>
           </SettingsProvider>
         ) : (
           <ThemeProvider preference="system">
@@ -125,6 +128,9 @@ function AppNavigator() {
         <Stack.Screen name="edit/[id]" options={{ presentation: 'modal', title: t.save.editTitle }} />
         <Stack.Screen name="session/[id]" options={{ title: t.details.title }} />
         <Stack.Screen name="return/[id]" options={{ title: t.returnToCar.title }} />
+        <Stack.Screen name="premium" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="zones/index" options={{ title: t.zones.title }} />
+        <Stack.Screen name="zones/[id]" options={{ presentation: 'modal', title: t.zones.editTitle }} />
         <Stack.Screen
           name="timer/[id]"
           options={{

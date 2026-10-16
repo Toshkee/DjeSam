@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutAnimation, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, LayoutAnimation, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/ui/AppText';
@@ -8,6 +8,8 @@ import { ChipGroup } from '@/components/ui/Chip';
 import { Icon, type IconName } from '@/components/ui/Icon';
 import { TextField } from '@/components/ui/TextField';
 import { useLiveLocation, useLocationStatus } from '@/features/location/hooks';
+import { useZones } from '@/features/parking/hooks';
+import { usePremium } from '@/features/premium/PremiumProvider';
 import { PARKING_TYPES, type Coordinates, type LocationSource, type ParkingType } from '@/features/parking/types';
 import { useI18n } from '@/i18n';
 import { parseMoneyToCents } from '@/i18n/format';
@@ -17,7 +19,8 @@ import { FormSection } from './FormSection';
 import { LocationCard } from './LocationCard';
 import { LocationPickerModal } from './LocationPickerModal';
 import { PhotoField } from './PhotoField';
-import { TimerPicker, type TimerChoice } from './TimerPicker';
+import { RemindersUpsell } from './RemindersUpsell';
+import { TimerPicker, timerChoiceFromMinutes, type TimerChoice } from './TimerPicker';
 
 export interface ParkingFormValues {
   coordinates: Coordinates | null;
@@ -56,7 +59,7 @@ const TYPE_ICONS: Record<ParkingType, IconName> = {
 const animate = () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
 export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
-  const { t } = useI18n();
+  const { t, f } = useI18n();
   const { colors, spacing } = useTheme();
   const [values, setValues] = useState<ParkingFormValues>(initial);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -67,6 +70,9 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
   const set = <K extends keyof ParkingFormValues>(key: K, value: ParkingFormValues[K]) =>
     setValues((v) => ({ ...v, [key]: value }));
 
+  const { isPremium } = usePremium();
+  const { data: zones } = useZones();
+  const [zoneId, setZoneId] = useState<string | null>(null);
   const location = useLocationStatus();
   const granted = location.permission?.state === 'granted';
   const live = useLiveLocation(granted);
@@ -92,7 +98,11 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
   }));
 
   return (
-    <View style={[styles.fill, { backgroundColor: colors.background }]}>
+    // Keeps the bottom action button above the keyboard on iOS.
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={[styles.fill, { backgroundColor: colors.background }]}
+    >
       <ScrollView
         contentContainerStyle={{ padding: spacing.lg, gap: spacing.xxl, paddingBottom: spacing.xxxl }}
         keyboardShouldPersistTaps="handled"
@@ -125,9 +135,37 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
           />
         </FormSection>
 
+        {mode === 'create' && isPremium && zones && zones.length > 0 && (
+          <FormSection title={t.zones.pick}>
+            <ChipGroup<string | null>
+              scroll
+              accessibilityLabel={t.zones.pick}
+              options={zones.map((z) => ({
+                value: z.id,
+                label: `${z.name} · ${f.minutesLabel(z.durationMinutes)}`,
+                icon: 'bookmark-outline' as const,
+              }))}
+              value={zoneId}
+              onChange={(id) => {
+                const zone = zones.find((z) => z.id === id);
+                if (!zone || id === zoneId) return setZoneId(null);
+                setZoneId(id);
+                // A zone only pre-fills the form; every field stays editable.
+                setValues((v) => ({
+                  ...v,
+                  timer: timerChoiceFromMinutes(zone.durationMinutes),
+                  parkingType: zone.parkingType ?? v.parkingType,
+                  section: v.section.trim() ? v.section : zone.name,
+                }));
+              }}
+            />
+          </FormSection>
+        )}
+
         {mode === 'create' && (
           <FormSection title={t.timer.title} aside={t.common.optional}>
             <TimerPicker value={values.timer} onChange={(timer) => set('timer', timer)} />
+            {!isPremium && values.timer.kind !== 'none' && <RemindersUpsell />}
             <AppText variant="caption" tone="subtle">
               {t.timer.disclaimer}
             </AppText>
@@ -234,7 +272,7 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
           }}
         />
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

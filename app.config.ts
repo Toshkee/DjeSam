@@ -84,6 +84,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     ['react-native-maps', { androidGoogleMapsApiKey: androidMapsKey }],
+    // In-app purchase capability for the one-time Premium unlock.
+    'expo-iap',
   ],
   experiments: {
     typedRoutes: true,
