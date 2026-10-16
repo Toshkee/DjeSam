@@ -227,6 +227,7 @@ export const me = {
       reminders: 'Podsjetnik prije isteka parkinga i kad istekne',
       photo: 'Fotografija mjesta đe je auto',
       history: 'Neograničena istorija parkiranja',
+      lockScreen: 'Odbrojavanje na zaključanom ekranu i u Dynamic Island-u',
       zones: 'Moje zone: npr. „Zona 1 · 1 h“ popuni vrijeme i vrstu parkinga jednim dodirom',
     },
     buy: (price: string) => `Otključaj za ${price}`,
@@ -250,6 +251,11 @@ export const me = {
     devToggle: 'Premium (test, samo u razvoju)',
     settingsRow: 'ĐeSam Premium',
     learnMore: 'Saznaj više',
+  },
+
+  liveActivity: {
+    title: 'Parking ističe za',
+    expires: 'Ističe u',
   },
 
   zones: {

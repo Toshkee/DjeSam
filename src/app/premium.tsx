@@ -14,8 +14,9 @@ import { usePremium } from '@/features/premium/PremiumProvider';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
-const FEATURES: { key: 'reminders' | 'photo' | 'history' | 'zones'; icon: IconName }[] = [
+const FEATURES: { key: 'reminders' | 'lockScreen' | 'photo' | 'history' | 'zones'; icon: IconName }[] = [
   { key: 'reminders', icon: 'notifications-outline' },
+  { key: 'lockScreen', icon: 'phone-portrait-outline' },
   { key: 'photo', icon: 'camera-outline' },
   { key: 'history', icon: 'time-outline' },
   { key: 'zones', icon: 'bookmark-outline' },

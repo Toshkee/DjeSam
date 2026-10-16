@@ -1,4 +1,5 @@
 import { getDb } from '@/db/client';
+import { syncLiveActivity } from '@/features/liveActivity/liveActivity';
 import { reverseGeocode } from '@/features/location/location';
 import { cancelAllReminders, syncReminders } from '@/features/notifications/reminders';
 import { deleteAllPhotos, deletePhoto, deletePhotos, removeOrphanedPhotos, storePhoto } from '@/features/photos/photoStorage';
@@ -63,6 +64,7 @@ export async function resyncReminders(): Promise<void> {
     const { parking, settings, entitlement } = await getRepositories();
     const [active, prefs, premium] = await Promise.all([parking.getActive(), settings.load(), entitlement.load()]);
     await syncReminders(premium ? active : null, prefs);
+    await syncLiveActivity(premium ? active : null);
   } catch {
     // Notifications are best effort; the in-app timer still shows the correct state.
   }
@@ -79,6 +81,8 @@ async function fillAddressInBackground(id: string, coords: { latitude: number; l
     if (!current || current.latitude !== coords.latitude || current.longitude !== coords.longitude) return;
     await parking.update(id, { address }, Date.now());
     notifyChanged();
+    // Refresh the Lock Screen activity so it shows the address.
+    await resyncReminders();
   } catch {
     // Address is optional.
   }
@@ -186,6 +190,7 @@ export async function updateParking(id: string, input: ParkingUpdateInput): Prom
     deletePhoto(existing.photoFile);
   }
   notifyChanged();
+  await resyncReminders();
   if (moved) void fillAddressInBackground(id, input.coordinates);
 }
 
