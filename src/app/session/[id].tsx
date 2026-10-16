@@ -150,10 +150,8 @@ function Details({ session }: { session: ParkingSession }) {
           {session.feeCents !== null && <ListRow label={t.details.fee} value={f.money(session.feeCents)} />}
         </ListGroup>
 
-        <View style={styles.row}>
-          <Button label={t.common.edit} icon="create-outline" variant="secondary" style={styles.flex} onPress={openEdit} />
-          <Button label={t.common.delete} icon="trash-outline" variant="danger" style={styles.flex} onPress={confirmDelete} />
-        </View>
+        {/* Editing lives in the header (iOS convention); the destructive action stays separate. */}
+        <Button label={t.common.delete} icon="trash-outline" variant="danger" onPress={confirmDelete} />
       </ScrollView>
     </>
   );
@@ -162,6 +160,4 @@ function Details({ session }: { session: ParkingSession }) {
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   map: { height: 170, overflow: 'hidden', borderWidth: StyleSheet.hairlineWidth },
-  row: { flexDirection: 'row', gap: 8 },
-  flex: { flex: 1 },
 });
