@@ -72,7 +72,7 @@ function ToastView({ message, onDone }: { message: ToastMessage; onDone: () => v
     return () => sequence.stop();
   }, [anim, onDone]);
 
-  const color = { success: colors.success, info: colors.accent, danger: colors.danger }[message.tone];
+  const color = { success: colors.success, info: colors.accentText, danger: colors.danger }[message.tone];
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.host, { paddingTop: insets.top + 8 }]}>
       <Animated.View

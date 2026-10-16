@@ -10,7 +10,7 @@ const toneColor = (c: Palette, tone: TextTone): string =>
     default: c.text,
     muted: c.textMuted,
     subtle: c.textSubtle,
-    accent: c.accent,
+    accent: c.accentText,
     success: c.success,
     warning: c.warning,
     danger: c.danger,

@@ -114,7 +114,7 @@ function AppNavigator() {
           headerTransparent: false,
           headerShadowVisible: false,
           headerStyle: { backgroundColor: colors.background },
-          headerTintColor: colors.accent,
+          headerTintColor: colors.accentText,
           headerTitleStyle: { color: colors.text },
           headerBackButtonDisplayMode: 'minimal',
           contentStyle: { backgroundColor: colors.background },

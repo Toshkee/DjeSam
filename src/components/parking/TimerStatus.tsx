@@ -18,9 +18,10 @@ export function TimerStatus({ timer, compact }: { timer: TimerInfo; compact?: bo
 
   if (state.status === 'none' || state.expiresAt === null) return null;
 
-  const tone = state.status === 'expired' ? 'danger' : state.status === 'warning' ? 'warning' : 'accent';
-  const color = { danger: colors.danger, warning: colors.warning, accent: colors.accent }[tone];
-  const soft = { danger: colors.dangerSoft, warning: colors.warningSoft, accent: colors.accentSoft }[tone];
+  // Traffic light: green while valid, amber inside the reminder window, red once expired.
+  const tone = state.status === 'expired' ? 'danger' : state.status === 'warning' ? 'warning' : 'success';
+  const color = { danger: colors.danger, warning: colors.warning, success: colors.success }[tone];
+  const soft = { danger: colors.dangerSoft, warning: colors.warningSoft, success: colors.successSoft }[tone];
 
   const headline =
     state.status === 'expired'

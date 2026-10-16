@@ -21,7 +21,7 @@ export function EmptyState({
   return (
     <View style={[styles.wrap, { padding: spacing.xxl, gap: spacing.md }]}>
       <View style={[styles.iconWrap, { backgroundColor: colors.accentSoft }]}>
-        <Icon name={icon} size={28} color={colors.accent} />
+        <Icon name={icon} size={28} color={colors.accentText} />
       </View>
       <AppText variant="heading" align="center">
         {title}

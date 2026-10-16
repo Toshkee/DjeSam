@@ -33,7 +33,7 @@ export function IconButton({ icon, label, onPress, tone = 'default', floating, s
         style,
       ]}
     >
-      <Icon name={icon} size={20} color={tone === 'accent' ? colors.accent : colors.text} />
+      <Icon name={icon} size={20} color={tone === 'accent' ? colors.accentText : colors.text} />
     </Pressable>
   );
 }

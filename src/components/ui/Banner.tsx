@@ -27,7 +27,8 @@ const defaultIcons: Record<Tone, IconName> = {
 export function Banner({ tone = 'info', icon, title, body, children }: BannerProps) {
   const { colors, radius, spacing } = useTheme();
   const palette = {
-    info: { bg: colors.accentSoft, fg: colors.accent },
+    // Neutral, so informational notes are never mistaken for errors next to the red accent.
+    info: { bg: colors.surfaceMuted, fg: colors.textMuted },
     warning: { bg: colors.warningSoft, fg: colors.warning },
     danger: { bg: colors.dangerSoft, fg: colors.danger },
     success: { bg: colors.successSoft, fg: colors.success },

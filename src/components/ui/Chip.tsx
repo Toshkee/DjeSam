@@ -15,7 +15,7 @@ interface ChipProps {
 
 export function Chip({ label, selected, onPress, icon }: ChipProps) {
   const { colors, radius } = useTheme();
-  const fg = selected ? colors.accent : colors.text;
+  const fg = selected ? colors.accentText : colors.text;
   return (
     <Pressable
       accessibilityRole="radio"

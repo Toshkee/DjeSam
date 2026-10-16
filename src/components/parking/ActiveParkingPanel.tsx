@@ -60,7 +60,7 @@ export function ActiveParkingPanel({ session, userFix, onNewParking }: Props) {
           <Image source={{ uri: thumb }} style={[styles.thumb, { borderRadius: radius.md }]} contentFit="cover" />
         ) : (
           <View style={[styles.thumb, styles.thumbIcon, { borderRadius: radius.md, backgroundColor: colors.accentSoft }]}>
-            <Icon name="car" size={24} color={colors.accent} />
+            <Icon name="car" size={24} color={colors.accentText} />
           </View>
         )}
         <View style={styles.flex}>
@@ -68,7 +68,7 @@ export function ActiveParkingPanel({ session, userFix, onNewParking }: Props) {
           <AppText variant="label" tone="muted" numberOfLines={1}>
             {t.map.parkedAt(f.relativeDateTime(session.parkedAt))}
           </AppText>
-          <AppText variant="label" tone={distance ? 'accent' : 'subtle'} numberOfLines={1}>
+          <AppText variant="label" tone={distance ? 'default' : 'subtle'} numberOfLines={1}>
             {distance ? t.map.distanceFromYou(distance) : t.map.distanceUnknown}
             {session.address ? ` · ${session.address}` : ''}
           </AppText>

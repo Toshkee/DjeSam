@@ -29,7 +29,7 @@ function colorsFor(c: Palette, variant: ButtonVariant, pressed: boolean) {
     case 'secondary':
       return { bg: pressed ? c.surfaceMuted : c.surface, fg: c.text, border: c.border };
     case 'ghost':
-      return { bg: pressed ? c.surfaceMuted : 'transparent', fg: c.accent, border: 'transparent' };
+      return { bg: pressed ? c.surfaceMuted : 'transparent', fg: c.accentText, border: 'transparent' };
     case 'danger':
       return { bg: pressed ? c.dangerSoft : 'transparent', fg: c.danger, border: c.border };
   }

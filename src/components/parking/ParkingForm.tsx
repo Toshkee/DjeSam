@@ -197,7 +197,7 @@ export function ParkingForm({ mode, initial, submitting, onSubmit }: Props) {
               { borderColor: colors.border, backgroundColor: pressed ? colors.surfaceMuted : colors.surface },
             ]}
           >
-            <Icon name="add-circle-outline" size={20} color={colors.accent} />
+            <Icon name="add-circle-outline" size={20} color={colors.accentText} />
             <View style={styles.flex}>
               <AppText variant="bodyStrong">{t.save.moreDetails}</AppText>
               <AppText variant="caption" tone="subtle">

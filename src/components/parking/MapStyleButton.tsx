@@ -83,11 +83,11 @@ export function MapStyleButton({ style }: Props) {
                     { borderRadius: radius.md, backgroundColor: pressed ? colors.surfaceMuted : 'transparent' },
                   ]}
                 >
-                  <Icon name={ICONS[value]} size={20} color={selected ? colors.accent : colors.textMuted} />
+                  <Icon name={ICONS[value]} size={20} color={selected ? colors.accentText : colors.textMuted} />
                   <AppText variant={selected ? 'bodyStrong' : 'body'} tone={selected ? 'accent' : 'default'} style={styles.flex}>
                     {t.mapStyles[value]}
                   </AppText>
-                  {selected && <Icon name="checkmark" size={18} color={colors.accent} />}
+                  {selected && <Icon name="checkmark" size={18} color={colors.accentText} />}
                 </Pressable>
               );
             })}

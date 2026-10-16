@@ -13,6 +13,8 @@ export interface Palette {
   textOnAccent: string;
   accent: string;
   accentPressed: string;
+  /** Accent for text and icons on surfaces (differs from the fill colour in dark mode for contrast). */
+  accentText: string;
   accentSoft: string;
   success: string;
   successSoft: string;
@@ -27,8 +29,9 @@ export interface Palette {
 }
 
 /**
- * Brand: deep navy text, clean light surfaces and a confident Adriatic teal-blue accent.
- * Green is reserved for "saved" confirmations, amber for expiring parking.
+ * Brand: deep navy text, clean light surfaces and the red of the Montenegrin flag as accent
+ * (the gold of the flag lives in the icon). Because the accent is red, status colours form a
+ * traffic light: green = parking valid, amber = expiring soon, danger red = expired.
  */
 const light: Palette = {
   background: '#F4F6F9',
@@ -41,18 +44,19 @@ const light: Palette = {
   textMuted: '#4D5B6E',
   textSubtle: '#7D899A',
   textOnAccent: '#FFFFFF',
-  accent: '#0A6CDB',
-  accentPressed: '#0858B4',
-  accentSoft: '#E3EFFD',
+  accent: '#C40308',
+  accentPressed: '#A00207',
+  accentText: '#C40308',
+  accentSoft: '#FDECEC',
   success: '#17855A',
   successSoft: '#E1F4EA',
   warning: '#B86A00',
   warningSoft: '#FFF2DC',
-  danger: '#C8322B',
-  dangerSoft: '#FCE7E5',
+  danger: '#B42318',
+  dangerSoft: '#FDEAE7',
   overlay: 'rgba(8, 15, 26, 0.45)',
   shadow: '#0E1A2B',
-  marker: '#0A6CDB',
+  marker: '#C40308',
   markerRing: '#FFFFFF',
 };
 
@@ -67,18 +71,19 @@ const dark: Palette = {
   textMuted: '#A7B3C4',
   textSubtle: '#76849A',
   textOnAccent: '#FFFFFF',
-  accent: '#3D8EF0',
-  accentPressed: '#2F78D2',
-  accentSoft: '#15294A',
+  accent: '#D92D2D',
+  accentPressed: '#B82222',
+  accentText: '#FF6B6B',
+  accentSoft: '#3A1416',
   success: '#3DBA82',
   successSoft: '#123326',
   warning: '#F0A93B',
   warningSoft: '#3A2A10',
-  danger: '#F06A62',
+  danger: '#F97066',
   dangerSoft: '#3D1A18',
   overlay: 'rgba(0, 0, 0, 0.6)',
   shadow: '#000000',
-  marker: '#3D8EF0',
+  marker: '#D92D2D',
   markerRing: '#0A111C',
 };
 
