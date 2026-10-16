@@ -90,6 +90,12 @@ npm install
 npx expo run:ios
 ```
 
+Ako `pod install` padne sa greškom `Unicode Normalization not appropriate for ASCII-8BIT`, CocoaPods-u treba UTF-8 lokal:
+
+```bash
+export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+```
+
 ### Android
 
 Android mapi treba Google Maps API ključ (Maps SDK for Android). Ključ se prosljeđuje preko promjenljive okruženja:
@@ -129,6 +135,16 @@ npx expo-doctor     # provjera kompatibilnosti zavisnosti
 - **Tačnost obavještenja na Androidu.** Android 14+ podrazumijevano ne dozvoljava „exact alarm”, pa podsjetnik može stići i nekoliko minuta kasnije. iOS ograničava aplikaciju na 64 zakazana obavještenja, a ĐeSam koristi najviše 2.
 - **Plaćanje.** Aplikacija ne plaća i ne produžava parking. Tajmer samo mjeri vrijeme koje korisnik unese.
 - **Nema sigurnosne kopije.** Brisanjem aplikacije brišu se i podaci.
+
+### Provjereno na iOS simulatoru (iPhone 18 Pro Max, iOS 27)
+
+- Traženje dozvole za lokaciju, centriranje mape i čuvanje parkinga preko GPS-a (preciznost ±5 m).
+- Ručno pomjeranje pina, vrsta parkinga, sprat, fotografija iz galerije i tajmer.
+- Objašnjenje prije sistemskog upita za obavještenja.
+- Odbrojavanje i produženje tajmera.
+- Ekran „Vrati me do auta”: stvarna udaljenost, otvaranje Apple Mapa i dijeljenje lokacije.
+- Završavanje i brisanje parkinga, istorija, detalji i svijetla/tamna tema.
+- Podaci ostaju sačuvani nakon restarta aplikacije.
 
 ### Šta treba testirati na fizičkom uređaju
 
