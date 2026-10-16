@@ -39,9 +39,13 @@ export function LocationCard({
   const { colors, radius, spacing, scheme } = useTheme();
   const mapRef = useRef<MapView>(null);
 
+  const lat = coordinates?.latitude;
+  const lng = coordinates?.longitude;
   useEffect(() => {
-    if (coordinates) mapRef.current?.animateToRegion({ ...coordinates, ...DELTA }, 300);
-  }, [coordinates]);
+    if (lat !== undefined && lng !== undefined) {
+      mapRef.current?.animateToRegion({ latitude: lat, longitude: lng, ...DELTA }, 300);
+    }
+  }, [lat, lng]);
 
   const denied = permission?.state === 'denied';
   const servicesOff = servicesEnabled === false;
