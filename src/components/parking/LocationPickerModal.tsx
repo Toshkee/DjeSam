@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 import MapView, { type Region } from 'react-native-maps';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/ui/AppText';
 import { Button } from '@/components/ui/Button';
@@ -38,50 +38,53 @@ export function LocationPickerModal({ visible, initial, userLocation, onCancel, 
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" onRequestClose={onCancel}>
-      <View style={[styles.fill, { backgroundColor: colors.background }]}>
-        <MapView
-          ref={mapRef}
-          style={StyleSheet.absoluteFill}
-          initialRegion={initialRegion}
-          showsUserLocation
-          showsMyLocationButton={false}
-          showsPointsOfInterests={false}
-          userInterfaceStyle={scheme}
-          onRegionChangeComplete={(r) => setCenter({ latitude: r.latitude, longitude: r.longitude })}
-          accessibilityLabel={t.save.adjustHint}
-        />
-        <View pointerEvents="none" style={styles.centerPin}>
-          <CarPin />
-        </View>
-        <SafeAreaView edges={['top']} style={[styles.top, { paddingHorizontal: spacing.lg }]} pointerEvents="box-none">
-          <IconButton icon="close" label={t.common.cancel} onPress={onCancel} floating />
-          <View style={[styles.hint, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <AppText variant="label" align="center">
-              {t.save.adjustHint}
-            </AppText>
-          </View>
-          {userLocation ? (
-            <IconButton
-              icon="locate"
-              label={t.save.useMyLocation}
-              tone="accent"
-              floating
-              onPress={() => mapRef.current?.animateToRegion({ ...userLocation, ...ZOOMED }, 400)}
-            />
-          ) : (
-            <View style={styles.spacer} />
-          )}
-        </SafeAreaView>
-        <SafeAreaView edges={['bottom']} style={[styles.bottom, { padding: spacing.lg }]}>
-          <Button
-            label={t.save.confirmPosition}
-            icon="checkmark"
-            size="lg"
-            disabled={!center}
-            onPress={() => center && onConfirm(center)}
+      {/* A Modal is a separate native root, so it needs its own safe-area provider. */}
+      <SafeAreaProvider>
+        <View style={[styles.fill, { backgroundColor: colors.background }]}>
+          <MapView
+            ref={mapRef}
+            style={StyleSheet.absoluteFill}
+            initialRegion={initialRegion}
+            showsUserLocation
+            showsMyLocationButton={false}
+            showsPointsOfInterests={false}
+            userInterfaceStyle={scheme}
+            onRegionChangeComplete={(r) => setCenter({ latitude: r.latitude, longitude: r.longitude })}
+            accessibilityLabel={t.save.adjustHint}
           />
-        </SafeAreaView>
-      </View>
+          <View pointerEvents="none" style={styles.centerPin}>
+            <CarPin />
+          </View>
+          <SafeAreaView edges={['top']} style={[styles.top, { paddingHorizontal: spacing.lg }]} pointerEvents="box-none">
+            <IconButton icon="close" label={t.common.cancel} onPress={onCancel} floating />
+            <View style={[styles.hint, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <AppText variant="label" align="center">
+                {t.save.adjustHint}
+              </AppText>
+            </View>
+            {userLocation ? (
+              <IconButton
+                icon="locate"
+                label={t.save.useMyLocation}
+                tone="accent"
+                floating
+                onPress={() => mapRef.current?.animateToRegion({ ...userLocation, ...ZOOMED }, 400)}
+              />
+            ) : (
+              <View style={styles.spacer} />
+            )}
+          </SafeAreaView>
+          <SafeAreaView edges={['bottom']} style={[styles.bottom, { padding: spacing.lg }]}>
+            <Button
+              label={t.save.confirmPosition}
+              icon="checkmark"
+              size="lg"
+              disabled={!center}
+              onPress={() => center && onConfirm(center)}
+            />
+          </SafeAreaView>
+        </View>
+      </SafeAreaProvider>
     </Modal>
   );
 }
