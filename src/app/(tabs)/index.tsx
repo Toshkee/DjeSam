@@ -33,8 +33,11 @@ export default function MapScreen() {
   const loading = active === undefined && !error;
 
   // Frame the map once: on the car if there is one, otherwise on the user's first fix.
+  // Animations requested before the native map is ready are dropped, so wait for onMapReady.
+  const [mapReady, setMapReady] = useState(false);
   const framed = useRef<'none' | 'user' | 'car'>('none');
   useEffect(() => {
+    if (!mapReady) return;
     if (active && framed.current !== 'car') {
       const region = regionForPoints(fix ? [active, fix] : [active]);
       if (region) mapRef.current?.animateToRegion(region, 500);
@@ -44,7 +47,7 @@ export default function MapScreen() {
       framed.current = 'user';
     }
     if (!active && framed.current === 'car') framed.current = 'none';
-  }, [active, fix]);
+  }, [active, fix, mapReady]);
 
   // Subtle slide-up when switching between "save" and "active parking" panels.
   const [panelAnim] = useState(() => new Animated.Value(0));
@@ -90,6 +93,7 @@ export default function MapScreen() {
         showsPointsOfInterests={false}
         userInterfaceStyle={scheme}
         mapPadding={{ top: insets.top, right: 0, bottom: panelHeight, left: 0 }}
+        onMapReady={() => setMapReady(true)}
       >
         {active && <CarMarker coordinate={active} title={t.map.markerTitle} />}
       </MapView>

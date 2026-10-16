@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native';
 import MapView from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,13 +16,14 @@ import { openDirections, shareCarLocation } from '@/features/directions/openDire
 import { useLiveLocation, useLocationStatus } from '@/features/location/hooks';
 import { useSession } from '@/features/parking/hooks';
 import { endParking } from '@/features/parking/service';
-import { isActive, type ParkingSession } from '@/features/parking/types';
+import { isActive, type Coordinates, type ParkingSession } from '@/features/parking/types';
 import { useI18n } from '@/i18n';
 import { distanceMeters, isApproximate, regionForPoints } from '@/lib/geo';
 import { useTheme } from '@/theme/ThemeProvider';
 
 /** Below this distance (and with a decent fix) we stop pretending to be more precise than GPS. */
 const NEARBY_METERS = 25;
+const REFRAME_METERS = 30;
 
 export default function ReturnToCarScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -59,13 +60,24 @@ function ReturnView({ session }: { session: ParkingSession }) {
   const granted = location.permission?.state === 'granted';
   const fix = useLiveLocation(granted);
 
-  const framedWithUser = useRef(false);
+  // Keep car and user in view as the user walks (the first fix may be a stale cached one),
+  // but stop auto-framing as soon as the user pans the map themselves.
+  const autoFrame = useRef(true);
+  const lastFramed = useRef<Coordinates | null>(null);
+  const frame = useCallback(
+    (user: Coordinates | null) => {
+      const region = regionForPoints(user ? [session, user] : [session], 0.003);
+      if (region) mapRef.current?.animateToRegion(region, 400);
+      lastFramed.current = user;
+    },
+    [session],
+  );
+  const [mapReady, setMapReady] = useState(false);
   useEffect(() => {
-    if (framedWithUser.current) return;
-    const region = regionForPoints(fix ? [session, fix] : [session], 0.003);
-    if (region) mapRef.current?.animateToRegion(region, 400);
-    if (fix) framedWithUser.current = true;
-  }, [fix, session]);
+    if (!mapReady || !autoFrame.current) return;
+    const last = lastFramed.current;
+    if (!fix || !last || distanceMeters(last, fix) > REFRAME_METERS) frame(fix);
+  }, [fix, frame, mapReady]);
 
   const meters = fix ? distanceMeters(fix, session) : null;
   const nearby = meters !== null && meters < NEARBY_METERS && !isApproximate(fix?.accuracy ?? null);
@@ -109,6 +121,10 @@ function ReturnView({ session }: { session: ParkingSession }) {
           showsMyLocationButton={false}
           showsPointsOfInterests={false}
           userInterfaceStyle={scheme}
+          onMapReady={() => setMapReady(true)}
+          onPanDrag={() => {
+            autoFrame.current = false;
+          }}
         >
           <CarMarker coordinate={session} title={t.map.markerTitle} />
         </MapView>
@@ -118,8 +134,8 @@ function ReturnView({ session }: { session: ParkingSession }) {
           floating
           style={[styles.fitButton, { right: spacing.lg }]}
           onPress={() => {
-            const region = regionForPoints(fix ? [session, fix] : [session], 0.003);
-            if (region) mapRef.current?.animateToRegion(region, 400);
+            autoFrame.current = true;
+            frame(fix);
           }}
         />
       </View>
