@@ -141,6 +141,7 @@ export const me = {
     submitEdit: 'Sačuvaj izmjene',
     saveFailed: 'Parking nije sačuvan. Pokušaj ponovo.',
     photoFailed: 'Fotografija nije sačuvana, ali lokacija jeste.',
+    updatedToast: 'Izmjene su sačuvane',
     moreDetails: 'Dodaj detalje',
     fewerDetails: 'Manje detalja',
   },
@@ -220,6 +221,7 @@ export const me = {
 
   details: {
     title: 'Detalji parkinga',
+    untitled: 'Parking',
     address: 'Adresa',
     coordinates: 'Koordinate',
     type: 'Vrsta',

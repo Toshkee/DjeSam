@@ -4,6 +4,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
+    "types": ["jest", "node"],
     "paths": {
       "@/*": ["./src/*"]
     }
